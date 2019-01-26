@@ -8,9 +8,9 @@ services:
   database1:
     image: postgres:10
     volumes:
-      - database1_volume:/var/lib/postgresql/data
+      - ./database1_volume:/var/lib/postgresql/data
     env_file:
-      - config/db/database1_env
+      - ./config/db/database1_env
     networks:
       - database1_network
 
@@ -21,15 +21,13 @@ services:
       - DJANGO_SETTINGS_MODULE
     volumes:
       - .:/opt/services/djangoapp/src
-      - static:/opt/services/djangoapp/static
-      - media:/opt/services/djangoapp/media
+      - ./static:/opt/services/djangoapp/static
+      - ./media:/opt/services/djangoapp/media
     networks:
-      - database1_network
-      - database2_network
+      - database1_network      
       - nginx_network
     depends_on:
-      - database1
-      - database2
+      - database1      
 
   # reverse proxy container (nginx)
   nginx:
@@ -38,8 +36,8 @@ services:
       - 8000:80
     volumes:
       - ./config/nginx/conf.d:/etc/nginx/conf.d
-      - static:/opt/services/djangoapp/static
-      - media:/opt/services/djangoapp/media
+      - ./static:/opt/services/djangoapp/static
+      - ./media:/opt/services/djangoapp/media
     networks:
       - nginx_network
     depends_on:
